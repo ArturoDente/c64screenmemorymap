@@ -1,0 +1,78 @@
+<html>
+<head>
+<style>
+tr,td {
+border-style:solid;
+border-width:1px;
+}
+
+td {
+	width: 10px;
+	height:10px;
+}
+
+.off{
+background-color:transparent;
+}
+
+.on{
+background-color:red;
+}
+
+textarea {
+height:90%
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+
+function inits(){
+	for (var y=0;y<25;y++){
+		var newrow=$('#screen').append('<tr></tr>');
+		for (var x=0;x<40;x++){
+			var index=(40*y)+x;
+			newrow.append('<td><div id="'+index+'" class="off" onclick="switchclass(this)" style="height: 15px;width:15px; overflow:hidden;">&nbsp;</div></td>');
+		}
+	}
+	
+}
+
+function generate(){
+var table=$('#screen');
+var arr=new Array();
+var trs=table.find('td');
+var counter=0;
+
+	var tds=table.find('td');
+	tds.each(function(){
+	var examThis=$(this).find('div:first-child');
+	if(examThis.hasClass('on')){
+		arr.push(examThis.prop('id'));
+	}
+	
+});
+$('#result').val(arr.toString());
+}
+
+function switchclass(elem){
+if ($(elem).hasClass('off')){
+	$(elem).removeClass('off');
+	$(elem).addClass('on');
+} else {
+	$(elem).removeClass('on');
+	$(elem).addClass('off');
+}
+}
+</script>
+
+</head>
+<body onload="inits()">
+<b>C64 screen memory editor</b> <i>by Francesco Clementoni aka Arturo Dente</i>
+<br>
+<table><tr><td>
+<table id="screen">
+</table>
+</td><td><input type="button" value="Generate data" style="width:100%" onclick="generate()"><br><textarea id="result"></textarea></td></tr></table>
+</body>
+</html>
