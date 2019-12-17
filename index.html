@@ -19,6 +19,9 @@ background-color:transparent;
 background-color:red;
 }
 
+.pennasu{
+	font-weight:bolder;
+}
 textarea {
 height:90%
 }
@@ -38,6 +41,28 @@ function inits(){
 	
 }
 
+function fill(){
+$('.pennasu').remove();
+var pennasu=true;
+var table=$('#screen');
+var trs=table.find('td');
+var counter=0;
+
+	var tds=table.find('td');
+	tds.each(function(){
+	var examThis=$(this).find('div:first-child');
+	if (pennasu && !examThis.find('span:first-child').hasClass('pennasu'))
+		{
+			examThis.append('<span class="pennasu">*</span>');
+		}
+	if(examThis.hasClass('on')){
+		pennasu=!pennasu;
+	}
+	
+});
+
+}
+
 function generate(){
 var table=$('#screen');
 var arr=new Array();
@@ -52,7 +77,7 @@ var counter=0;
 	}
 	
 });
-$('#result').val(arr.toString());
+$('#result').val('0,'+arr.toString());
 }
 
 function switchclass(elem){
@@ -63,6 +88,7 @@ if ($(elem).hasClass('off')){
 	$(elem).removeClass('on');
 	$(elem).addClass('off');
 }
+fill();
 }
 </script>
 
