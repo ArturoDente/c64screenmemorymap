@@ -1,25 +1,31 @@
-1 rem basic code to print level from data taken from html editor
-10 gosub 720
-20 lc=0:gosub 790
-30 end
-720 rem load levels in memory
-730 dim lv(6,130):cn=0
-740 read ld:ifld=-2thenll=lc:return
-760if ld=-1 then lc=lc+1:cn=0:nl=nl+1
-770 if ld=-1then goto 740
-780 lv(lc,cn)=ld:cn=cn+1:goto740
-790 rem writes level #lc
-800 ?"{clear}":cr=0:pg=-1
-810 fort=lv(lc,cr)tolv(lc,cr+1)-1
-820 ?"{pink}{cm b}";:next:?spc(lv(lc,cr+2)-lv(lc,cr+1));:cr=cr+2
-830 if(lv(lc,cr)*lv(lc,cr+1)*lv(lc,cr+2))=0then?"{home}";:return
-840 pg=notpg:goto810
-3000 data0,8,21,48,61,88,101,127,141,167,173,174,181,206,213,214,220,245,253,254
-3010data260,261,278,279,280,281,292,293,300,301,318,319,320,321,332,333,340,341
-3020data358,359,360,361,371,372,380,381,389,390,398,399,400,401,411,412,420,421
-3030data429,430,438,439,440,441,452,453,469,470,479,485,493,494,509,510,519,525
-3040data533,534,549,550,558,566,573,574,580,581,590,591,598,607,620,621,630,631
-3050data638,647,660,661,671,672,678,688,701,702,711,712,718,729,741,751,758,791
-3060data798,830,837,869,877,908,917,948,957,988,997
-3070 data -1
-3990 data-2
+10 rem basic code to print level from data taken from html editor
+20 c$="{pink}{cm +}":mx=130
+30 gosub 70
+40 lc=0:gosub 130
+50 geta$:ifa$=""thengoto50
+60 end
+70 rem load levels in memory
+80 dim lv(6,mx):cn=0:dimit(6)
+90 read ld:it(lc)=it(lc)+1:ifld=-2thenll=lc:return
+100if ld=-1 then lc=lc+1:cn=0:nl=nl+1
+110 if ld=-1then goto 90
+120 lv(lc,cn)=ld:cn=cn+1:goto90
+130 rem writes level #lc
+140 ?"{clear}";:cr=0
+150 fort=lv(lc,cr)tolv(lc,cr+1)-1
+160 ?c$;:next:if(lv(lc,cr+2))>0then?spc(lv(lc,cr+2)-lv(lc,cr+1))
+170 cr=cr+2:ifcr=it(lc)thengoto190
+180 goto150
+190 rem last chars
+200 fort=lv(lc,cr-2)to997:printc$;:next
+210 ?"{home}";:return
+3080 rem level 5
+3090data0,1,38,39,55,58,78,79,94,99,118,119,134,139,158,159,175,178,185,188,198
+3100data199,223,230,238,239,249,252,262,271,278,279,288,293,302,311,318,319,328
+3110data333,342,351,358,359,369,372,376,379,383,390,398,399,407,410,415,420,425
+3120data428,432,435,438,439,445,452,455,460,471,476,478,479,484,493,496,499,503
+3130data506,511,516,518,519,524,533,541,548,552,555,558,559,564,573,580,589,598
+3140data599,605,612,620,629,638,639,647,650,660,669,678,679,701,708,717,718,743
+3150data746,756,757,795,796,833,834,872,894,902,934,942,974,982
+3160 data-1
+4990 data-2
