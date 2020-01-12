@@ -1,0 +1,245 @@
+<html>
+<head>
+<style>
+tr,td {
+border-style:solid;
+border-width:1px;
+}
+div {
+border-width:1px;
+border-color:transparent;
+}
+td {
+	width: 10px;
+	height:10px;
+}
+
+.off{
+border-style:solid;
+border-width:1px;
+border-color:transparent;
+}
+
+.on{
+border-style:solid;
+border-width:1px;
+border-color:red;
+}
+
+.pennasu{
+	font-weight:bolder;
+}
+
+.color0 {
+background-color:black;
+}
+.color1{
+background-color:white;
+}
+
+.color2{
+background-color:#880000;
+}
+
+.color3{
+background-color:#AAFFEE;
+}
+.color4{
+background-color:#CC44CC;
+}
+.color5{
+background-color:#00CC55;
+}
+
+.color6 {
+background-color:#0000AA;
+}
+.color7 {
+background-color:#EEEE77;
+}
+.color8 {
+background-color:#DD8855;
+}
+.color9 {
+background-color:#664400;
+}
+.color10 {
+background-color:#FF7777;
+}
+.color11 {
+background-color:#333333;
+}
+.color12 {
+background-color:#777777;
+}
+.color13 {
+background-color:#AAFF66;
+}
+.color14 {
+background-color:#0088FF;
+}
+.color15 {
+background-color:#BBBBBB;
+}
+
+
+textarea {
+height:90%
+}
+
+</style>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+
+var numberofgroups=0;
+
+function inits(){
+	for (var y=0;y<25;y++){
+		var newrow=$('#screen').append('<tr></tr>');
+		for (var x=0;x<40;x++){
+			var index=(40*y)+x;
+			newrow.append('<td><div id="'+index+'" class="off" onclick="switchclass(this)" oncontextmenu="var c=prompt(\'color code? 0-15\');if(c){$(this).addClass(\'color\'+c);colorAllElementsByGroupClass($(this),\'color\'+c)};return false;" style="height: 15px;width:15px; overflow:hidden;">&nbsp;</div></td>');
+		}
+	}
+	
+	
+}
+
+function colorAllElementsByGroupClass(element,colorclass){
+var theClass = element.attr("class").match(/gr[0-9]+\b/);
+//console.log(theClass);
+eraseColors($('.'+theClass));
+$('.'+theClass).addClass(colorclass);
+}
+
+function eraseAllColors(){
+var divs=$('#screen').find('div');
+divs.each(function(){
+
+for (var t=0;t<16;t++){
+$(this).removeClass('color'+t);
+}
+})
+}
+
+function eraseColors(element){
+for (var t=0;t<16;t++){
+element.removeClass('color'+t);
+}
+}
+
+function deleteGroupsFromElement(element){
+var theClass = element.attr("class").match(/gr[0-9]+\b/);
+element.removeClass(theClass);
+}
+
+function deleteAllGroups(){ 
+var divs=$('#screen').find('div');
+divs.each(function(){
+for (var t=0;t<=numberofgroups;t++)
+	$(this).removeClass('gr'+t);
+});
+
+	
+}
+
+function fill(){
+$('.pennasu').remove();
+deleteAllGroups();
+numberofgroups=0;
+var pennasu=true;
+var table=$('#screen');
+var trs=table.find('td');
+var counter=0;
+
+	var tds=table.find('td');
+	tds.each(function(){
+	
+	var examThis=$(this).find('div:first-child');
+	if (pennasu && !examThis.find('span:first-child').hasClass('pennasu'))
+		{
+			examThis.append('<span class="pennasu" >*</span>');
+			
+			examThis.addClass('gr'+counter);
+		} else {
+		eraseColors(examThis);
+		}
+	if(examThis.hasClass('on')){
+		pennasu=!pennasu;
+		counter++;
+	}
+	
+});
+numberofgroups=counter;
+}
+
+function colourThem(ref){
+eraseColors($(ref));
+var c=prompt('color code? 0-15');
+$(ref).html($(ref).html().replace('pennasu',' color'+c));
+//console.log($(ref).hasClass('color'+c));
+}
+
+function generate(){
+var table=$('#screen');
+var arr=new Array();
+var trs=table.find('td');
+var counter=0;
+
+	var tds=table.find('td');
+	tds.each(function(){
+	var examThis=$(this).find('div:first-child');
+	if(examThis.hasClass('on')){
+	counter++;
+	/*
+	first element must be 0
+	*/
+	if (counter==1 && arr[0]!='0'){
+		arr.push('0');
+	}
+	
+	
+		var theClass = examThis.attr("class").match(/color[0-9]+\b/);
+		var infocol=(theClass!=null)?'*'+theClass:'';
+		var lengarr=arr.push(examThis.prop('id'));
+		arr[lengarr-2]=arr[lengarr-2]+infocol;
+		}
+	
+});
+var pref='0,';
+/*if (arr.toString().startsWith('0'))
+	pref='';*/
+var res='';
+for (var t=0;t<arr.length;t++){
+var tmps=String(arr[t]);
+console.log(tmps);
+res+='"'+tmps+'"'+((t<arr.length-1)?',':'');
+}
+$('#result').val(res);
+localStorage.setItem('cache',$('#screen').html());
+}
+
+function switchclass(elem){
+if ($(elem).hasClass('off')){
+	$(elem).removeClass('off');
+	$(elem).addClass('on');
+} else {
+	$(elem).removeClass('on');
+	$(elem).addClass('off');
+}
+fill();
+}
+</script>
+
+</head>
+<body onload="inits()">
+<b>C64 screen memory editor</b> <i>by Francesco Clementoni aka Arturo Dente</i>
+<br>
+<table><tr><td>
+<table id="screen">
+</table>
+</td><td>
+<input type="button" value="Reload last generated" style="width:100%" onclick="$('#screen').html(localStorage.getItem('cache'));"><br>
+<input type="button" value="Generate data" style="width:100%" onclick="generate()"><br><textarea id="result"></textarea></td></tr></table>
+</body>
+</html>
